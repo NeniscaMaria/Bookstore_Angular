@@ -12,6 +12,8 @@ import ro.ubb.catalog.web.converter.BookConverter;
 import ro.ubb.catalog.web.dto.BooksDto;
 import ro.ubb.catalog.web.dto.BookDto;
 
+import java.util.Set;
+
 @RestController
 public class BookController {
     public static final Logger log = LoggerFactory.getLogger(ClientController.class);
@@ -21,9 +23,9 @@ public class BookController {
     private BookConverter bookConverter;
 
     @RequestMapping(value = "/books",method = RequestMethod.GET)
-    BooksDto getBooks(){
+    Set<BookDto> getBooks(){
         log.trace("getBooks - method entered");
-        BooksDto result = new BooksDto(bookConverter.convertModelsToDtos(bookService.getAllBooks()));
+        Set<BookDto> result = bookConverter.convertModelsToDtos(bookService.getAllBooks());
         log.trace("getBooks - method finished. Returns b={}",result);
         return result;
     }

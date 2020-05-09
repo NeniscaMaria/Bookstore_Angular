@@ -13,6 +13,7 @@ import ro.ubb.catalog.core.model.validators.Validator;
 import ro.ubb.catalog.core.model.validators.ValidatorException;
 import ro.ubb.catalog.core.repository.Repository;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,10 +36,9 @@ public class BookServiceImpl implements BookService {
         return result;
     }
 
-    public Set<Book> getAllBooks() {
+    public List<Book> getAllBooks() {
         log.trace("getAllBooks - method entered");
-        Iterable<Book> books = repository.findAll();
-        Set<Book> result = StreamSupport.stream(books.spliterator(), false).collect(Collectors.toSet());
+        List<Book> result = repository.findAll();
         log.trace("getAllBooks - method finished. Returned: {}",result);
         return result;
     }
