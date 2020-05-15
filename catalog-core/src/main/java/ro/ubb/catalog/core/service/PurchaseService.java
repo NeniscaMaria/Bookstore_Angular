@@ -4,6 +4,7 @@ import org.springframework.data.domain.Sort;
 import ro.ubb.catalog.core.model.Purchase;
 import ro.ubb.catalog.core.model.validators.ValidatorException;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -12,8 +13,7 @@ public interface PurchaseService {
     Set<Purchase> sort(Sort.Direction dir, String ...a );
     Optional<Purchase> removePurchase(Long ID);
     Purchase updatePurchase(Long id, Purchase purchase) throws ValidatorException;
-    Set<Purchase> getAllPurchases();
+    List<Purchase> getAllPurchases();
     Set<Purchase> filterPurchasesByClientID(Long clientID);
-    void removePurchaseByClientID(Long clientID);
     Optional<Purchase> findOnePurchase(Long id);
 }

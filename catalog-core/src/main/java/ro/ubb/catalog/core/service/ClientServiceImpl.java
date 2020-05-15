@@ -8,12 +8,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.ubb.catalog.core.model.Client;
-import ro.ubb.catalog.core.model.validators.ClientValidator;
 import ro.ubb.catalog.core.model.validators.Validator;
 import ro.ubb.catalog.core.model.validators.ValidatorException;
 import ro.ubb.catalog.core.repository.Repository;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -67,12 +67,11 @@ public class ClientServiceImpl implements ClientService{
         return update;
     }
 
-    public Set<Client> getAllClients() {
-        log.trace("getAlClients - method entered");
-        Iterable<Client> clients = repository.findAll();
-        Set<Client> result = StreamSupport.stream(clients.spliterator(), false).collect(Collectors.toSet());
+    public List<Client> getAllClients() {
+        log.trace("getAllClients - method entered");
+        List<Client> clients = repository.findAll();
         log.trace("getAllClients - method finished and returned clients={}",clients);
-        return result;
+        return clients;
     }
 
     public Set<Client> filterClientsByName(String s)  {

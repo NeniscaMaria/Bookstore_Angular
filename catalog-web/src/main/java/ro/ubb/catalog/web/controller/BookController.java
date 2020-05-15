@@ -39,6 +39,7 @@ public class BookController {
         return result;
     }
 
+
     @RequestMapping(value = "/books/{id}",method = RequestMethod.PUT)
     BookDto updateBook(@PathVariable Long id, @RequestBody BookDto bookDto){
         log.trace("updateBook - method entered id={}, book={}",id, bookDto);

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,6 +92,14 @@ public class BookServiceImpl implements BookService {
         log.trace("findOne book - method entered id={}",bookID);
         log.trace("findOne book - method finished");
         return repository.findById(bookID);
+    }
+
+    @Override
+    public Long findID(Book book) {
+        log.trace("findID - method entered book={}",book);
+        Optional<Book> result = repository.findOne(Example.of(book));
+        log.trace("findId - method finished res={}",result.get());
+        return result.get().getId();
     }
 
 }

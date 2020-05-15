@@ -41,27 +41,15 @@ public class PurchaseValidator implements Validator<Purchase> {
 
         Optional<Purchase> purchase = Optional.ofNullable(Optional.ofNullable(entity).orElseThrow(()-> new ValidatorException("Entity is null.")));
         purchase.ifPresent(p->{
-            //validate if the client and the book exist
-            try {
-                if (!clientExists(entity.getClientID()))
-                    throw new ValidatorException("This client does not exist.");
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (!bookExists(entity.getBookID()))
-                    throw new ValidatorException("This book does not exist.");
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
             //validate the stock
+            /*
             try {
                 if (!isBookInSock(entity.getBookID(),entity.getNrBooks()))
                     throw new ValidatorException("We don't have that many books of this type in stock or you selected 0 books.");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
+            */
         });
     }
 

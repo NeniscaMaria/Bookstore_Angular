@@ -1,0 +1,35 @@
+<label>Serial number:
+  <input #serialNumber/>
+  <br/>
+</label>
+
+<label>Title:
+  <input #title/>
+  <br/>
+</label>
+
+<label>Author:
+  <input #author/>
+  <br/>
+</label>
+
+<label>Year:
+  <input #year/>
+  <br/>
+</label>
+
+<label>Price:
+  <input #price/>
+  <br/>
+</label>
+
+<label>In stock:
+  <input #inStock/>
+  <br/>
+</label>
+
+<button (click)="saveBook(serialNumber.value,title.value,author.value,year.value,price.value,inStock.value)">
+  Save
+</button>
+
+

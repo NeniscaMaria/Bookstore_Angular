@@ -15,6 +15,7 @@ import ro.ubb.catalog.web.dto.PurchaseDto;
 import ro.ubb.catalog.web.dto.PurchasesDto;
 
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class PurchaseController {
@@ -25,9 +26,9 @@ public class PurchaseController {
     private PurchaseConverter purchaseConverter;
 
     @RequestMapping(value = "/purchases",method = RequestMethod.GET)
-    PurchasesDto getPurchases(){
+    Set<PurchaseDto> getPurchases(){
         log.trace("getPurchases - method entered");
-        PurchasesDto result = new PurchasesDto(purchaseConverter.convertModelsToDtos(purchaseService.getAllPurchases()));
+        Set<PurchaseDto> result =purchaseConverter.convertModelsToDtos(purchaseService.getAllPurchases());
         log.trace("getPurchases - method finished. Returns b={}",result);
         return result;
     }

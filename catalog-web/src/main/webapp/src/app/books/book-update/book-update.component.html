@@ -1,0 +1,17 @@
+<form (ngSubmit)="onSubmit(f)" #f="ngForm">
+  <label for='serialNumber'>Serial number:</label><br>
+  <input type='text' id= 'serialNumber' name='serialNumber' [(ngModel)]="serialNumber" required><br>
+  <label for='title'>Title:</label><br>
+  <input type='text' id= 'title' name='title' [(ngModel)]="title" required><br>
+  <label for='author'>Author:</label><br>
+  <input type='text' id='author' name='author' [(ngModel)]="author" required ><br>
+  <label for='year'>Year:</label><br>
+  <input type='text' id='year' name='year' [(ngModel)]="year" required><br>
+  <label for='price'>Price:</label><br>
+  <input type='text' id='price' name='price' [(ngModel)]="price" required><br>
+  <label for='inStock'>In stock:</label><br>
+  <input type='text' id='instock' name='inStock' [(ngModel)]="inStock" required><br>
+  <button type="submit">Update book</button>
+</form>
+
+

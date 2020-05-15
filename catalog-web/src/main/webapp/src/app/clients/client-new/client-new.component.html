@@ -1,0 +1,16 @@
+<label>Serial number:
+  <input #serialNumber/>
+  <br/>
+</label>
+
+<label>Name:
+  <input #name/>
+  <br/>
+</label>
+
+
+<button (click)="saveClient(serialNumber.value,name.value)">
+  Save
+</button>
+
+

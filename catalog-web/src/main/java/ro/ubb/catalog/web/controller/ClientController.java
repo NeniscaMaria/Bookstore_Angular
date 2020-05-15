@@ -12,6 +12,8 @@ import ro.ubb.catalog.web.converter.ClientConverter;
 import ro.ubb.catalog.web.dto.ClientDto;
 import ro.ubb.catalog.web.dto.ClientsDto;
 
+import java.util.Set;
+
 @RestController
 public class ClientController {
     public static final Logger log = LoggerFactory.getLogger(ClientController.class);
@@ -21,9 +23,9 @@ public class ClientController {
     private ClientConverter clientConverter;
 
     @RequestMapping(value = "/clients",method = RequestMethod.GET)
-    ClientsDto getClients(){
+    Set<ClientDto> getClients(){
         log.trace("getClients - method entered");
-        ClientsDto result = new ClientsDto(clientConverter.convertModelsToDtos(clientService.getAllClients()));
+        Set<ClientDto> result = clientConverter.convertModelsToDtos(clientService.getAllClients());
         log.trace("getClients - method finished. Returns clients={}",result);
         return result;
     }

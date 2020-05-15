@@ -1,5 +1,6 @@
 package ro.ubb.catalog.core.service;
 
+import org.hibernate.boot.spi.JpaOrmXmlPersistenceUnitDefaultAware;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -7,10 +8,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
+import ro.ubb.catalog.core.model.BaseEntity;
 import ro.ubb.catalog.core.model.Client;
 import ro.ubb.catalog.core.model.Purchase;
 import ro.ubb.catalog.core.model.validators.Validator;
@@ -63,9 +66,10 @@ public class PurchaseServiceImpl implements PurchaseService{
     public Purchase updatePurchase(Long id, Purchase purchase) throws ValidatorException {
         log.trace("updatePurchase - method entered: purchase = {}",purchase);
         validator.validate(purchase);
+        //repository.
         Purchase s = repository.findById(id).orElse(purchase);
-        s.setBookID(purchase.getBookID());
-        s.setClientID(purchase.getClientID());
+        s.setBook(purchase.getBook());
+        s.setClient(purchase.getClient());
         s.setNrBooks(purchase.getNrBooks());
         log.trace("updatePurchase - updated: s={}",s);
         log.trace("updateStudent - method finished");
@@ -73,13 +77,11 @@ public class PurchaseServiceImpl implements PurchaseService{
     }
 
     @Transactional
-    public Set<Purchase> getAllPurchases() {
+    public List<Purchase> getAllPurchases() {
         log.trace("getAllPurchases - method entered");
-        Iterable<Purchase> purchases= repository.findAll();
-        log.trace("getAllPurchase - purchases got p={}",purchases);
-        Set<Purchase> result = StreamSupport.stream(purchases.spliterator(), false).collect(Collectors.toSet());
-        log.trace("getAllPurchases - method finished. Returned: {} ",result);
-        return result;
+        List<Purchase> purchases= repository.findAll();
+        log.trace("getAllPurchases - method finished. Returned: {} ",purchases);
+        return purchases;
     }
 
     @Transactional
@@ -88,16 +90,9 @@ public class PurchaseServiceImpl implements PurchaseService{
         Iterable<Purchase> purchases = repository.findAll();
         Set<Purchase> filteredPurchases= new HashSet<>();
         purchases.forEach(filteredPurchases::add);
-        filteredPurchases.removeIf(purchase -> !(purchase.getClientID()==clientID));
+        filteredPurchases.removeIf(purchase -> !purchase.getClient().getId().equals(clientID));
         log.trace("filterPurchasesByClientID - method finished");
         return filteredPurchases;
-    }
-
-    @Transactional
-    public void removePurchaseByClientID(Long clientID){
-        log.trace("removePurchaseByClientID - method entered id={}",clientID);
-        long no = repository.deleteByclientID(clientID);
-        log.trace("removePurchaseByClientID - method finished with {} rows deleted",no);
     }
 
     @Override

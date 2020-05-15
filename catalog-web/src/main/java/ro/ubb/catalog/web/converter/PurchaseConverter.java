@@ -10,8 +10,8 @@ public class PurchaseConverter extends BaseConverter<Purchase, PurchaseDto> {
     @Override
     public Purchase convertDtoToModel(PurchaseDto dto) {
         Purchase purchase = Purchase.builder()
-                .bookID(dto.getBookID())
-                .clientID(dto.getClientID())
+                .book(dto.getBook())
+                .client(dto.getClient())
                 .nrBooks(dto.getNrBooks())
                 .build();
         purchase.setId(dto.getId());
@@ -21,8 +21,8 @@ public class PurchaseConverter extends BaseConverter<Purchase, PurchaseDto> {
     @Override
     public PurchaseDto convertModelToDto(Purchase purchase) {
         PurchaseDto purchaseDto = PurchaseDto.builder()
-                .bookID(purchase.getBookID())
-                .clientID(purchase.getClientID())
+                .book(purchase.getBook())
+                .client(purchase.getClient())
                 .nrBooks(purchase.getNrBooks())
                 .build();
         purchaseDto.setId(purchase.getId());
