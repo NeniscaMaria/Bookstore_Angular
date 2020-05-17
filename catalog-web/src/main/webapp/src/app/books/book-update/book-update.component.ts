@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {BookService} from "../shared/book.service";
 import {ActivatedRoute} from "@angular/router";
 import {NgForm} from "@angular/forms";
 import {Location} from "@angular/common";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-book-update',
@@ -18,11 +19,9 @@ export class BookUpdateComponent implements OnInit {
   inStock:number;
   serialNumber:string;
 
-  constructor(private bookService:BookService, private route: ActivatedRoute,private location: Location) { }
-
-  ngOnInit(): void {
-    const id = +this.route.snapshot.paramMap.get('id');
-    this.bookService.showDetails(id).subscribe(book=>{
+  constructor(public dialogRef: MatDialogRef<BookUpdateComponent>,
+              @Inject(MAT_DIALOG_DATA) public id: number,private bookService:BookService, private route: ActivatedRoute,private location: Location) {
+    this.bookService.showDetails(this.id).subscribe(book=>{
         this.title=book.title;
         this.author=book.author;
         this.price=book.price;
@@ -32,8 +31,11 @@ export class BookUpdateComponent implements OnInit {
       }
     )
   }
+
+  ngOnInit(): void {
+  }
   onSubmit(form:NgForm){
-    console.log("updateBook:",form.value);
+    console.log("updateBook:",form.value,this.id);
     var newValues = form.value;
     var title = newValues['title'];
     var serialNumber = newValues['serialNumber'];
@@ -42,7 +44,7 @@ export class BookUpdateComponent implements OnInit {
     var price = newValues['price'];
     var inStock = newValues['inStock'];
     this.bookService.updateBook({
-      id:parseInt(this.route.snapshot.paramMap.get('id'),10),
+      id:this.id,
       serialNumber,
       title,
       author,
@@ -50,7 +52,6 @@ export class BookUpdateComponent implements OnInit {
       price,
       inStock,
     }).subscribe(book=>console.log("updated book: ",book));
-    this.location.back();
   }
 
 }

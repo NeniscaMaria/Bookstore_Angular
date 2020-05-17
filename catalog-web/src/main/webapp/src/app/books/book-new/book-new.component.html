@@ -1,35 +1,34 @@
+<div mat-dialog-content>
+  <p>Add new book:</p>
+</div>
 <label>Serial number:
-  <input #serialNumber/>
-  <br/>
+  <input #serialNumber/><br/></label>
+
+<label>Title:<br><input #title/><br/>
 </label>
 
-<label>Title:
-  <input #title/>
-  <br/>
-</label>
-
-<label>Author:
+<label>Author:<br>
   <input #author/>
   <br/>
 </label>
 
-<label>Year:
+<label>Year:<br>
   <input #year/>
   <br/>
 </label>
 
-<label>Price:
+<label>Price:<br>
   <input #price/>
   <br/>
 </label>
 
-<label>In stock:
+<label>In stock:<br>
   <input #inStock/>
   <br/>
 </label>
-
-<button (click)="saveBook(serialNumber.value,title.value,author.value,year.value,price.value,inStock.value)">
-  Save
-</button>
-
-
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close="" (click)="saveBook(serialNumber.value,title.value,author.value,year.value,price.value,inStock.value)">
+    Save
+  </button>
+  <button mat-button  cdkFocusInitial>Cancel</button>
+</div>

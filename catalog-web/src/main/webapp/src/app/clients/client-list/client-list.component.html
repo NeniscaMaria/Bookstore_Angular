@@ -32,7 +32,7 @@
     <td mat-cell *matCellDef="let element"> {{element.name}} </td>
   </ng-container>
 
-  <!-- Title Column -->
+  <!-- Serial number Column -->
   <ng-container matColumnDef="serialNumber">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Serial Number </th>
     <td mat-cell *matCellDef="let element"> {{element.serialNumber}} </td>
@@ -48,6 +48,9 @@
 <button class="delete" (click)="deleteClient()">
   Delete
 </button>
-<button class="buybtn" (click)="buy()"><!--routerLink="/client/buy/{{client.id}}">-->
+<button class="update" (click)="updateClient()">
+  Update
+</button>
+<button class="buybtn" (click)="buy()">
   Buy
 </button>

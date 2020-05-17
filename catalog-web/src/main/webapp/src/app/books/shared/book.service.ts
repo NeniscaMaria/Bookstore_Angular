@@ -25,7 +25,7 @@ export class BookService{
 
   deleteBook(id:number) : Observable<Book>{
     console.log("delete book",id);
-    return this.httpClient.delete<Book>(this.bookURL+"/"+id.toString(10))
+    return this.httpClient.delete<Book>(this.bookURL+"/"+id)
   }
 
   showDetails(id:number) : Observable<Book>{

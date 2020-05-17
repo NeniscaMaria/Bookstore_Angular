@@ -1,17 +1,15 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Client} from "../shared/client.model";
 import {ClientService} from "../shared/client.service";
-import {MatListOption} from "@angular/material/list";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {SelectionModel} from "@angular/cdk/collections";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
-import {DialogUpdateComponent} from "../../purchases/dialog-update/dialog-update.component";
 import {MatDialog} from "@angular/material/dialog";
-import {PurchaseNewComponent} from "../../purchases/purchase-new/purchase-new.component";
 import {UpdatePurchaseBookComponent} from "../../purchases/update-purchase-book/update-purchase-book.component";
-import {Book} from "../../books/shared/book.model";
 import {BookService} from "../../books/shared/book.service";
+import {BookUpdateComponent} from "../../books/book-update/book-update.component";
+import {ClientUpdateComponent} from "../client-update/client-update.component";
 
 @Component({
   selector: 'app-client-list',
@@ -23,8 +21,6 @@ export class ClientListComponent implements OnInit {
   clients: Client[];
   bookID:number;
   p: number = 1;
-  searchText: string;
-  selectedOptions: number[];
   resultsLength = 0;
   displayedColumns: string[] = ['select','serialNumber','name'];
   dataSource : MatTableDataSource<Client>;
@@ -70,10 +66,6 @@ export class ClientListComponent implements OnInit {
             });
       });
     }
-  }
-  onNgModelChange(event,selection:MatListOption[]){
-    console.log('on ng model change', selection.map(o=>o.value));
-    this.selectedOptions = selection.map(o=>o.value);
   }
 
   applyFilter($event: KeyboardEvent) {
@@ -137,5 +129,27 @@ export class ClientListComponent implements OnInit {
               console.log("book bought ", a, b)));
         });
       })
+  }
+
+  updateClient() {
+    if(this.selection.selected.length==0)
+      alert("Please select one client.");
+    if(this.selection.selected.length!=1)
+      alert("You can update a client at a time");
+    else{
+      this.openDialogUpdate(this.selection.selected[0].id);
+    }
+  }
+  private openDialogUpdate(id:number): void {
+    const dialogRef = this.dialog.open(ClientUpdateComponent, {
+      width: '20em',
+      data:id
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.table.renderRows();
+      window.location.reload();
+    });
   }
 }

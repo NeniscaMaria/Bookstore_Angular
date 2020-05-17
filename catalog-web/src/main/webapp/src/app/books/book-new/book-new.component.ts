@@ -26,7 +26,5 @@ export class BookNewComponent implements OnInit {
       inStock,
       clients: []
     }).subscribe(book=>console.log("saved book: ",book));
-    this.location.back();
-
   }
 }
