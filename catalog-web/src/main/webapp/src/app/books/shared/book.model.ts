@@ -1,3 +1,5 @@
+import {Client} from "../../clients/shared/client.model";
+
 export class Book{
   id: number;
   serialNumber: string;
@@ -6,4 +8,5 @@ export class Book{
   year: number;
   price: number;
   inStock: number;
+  clients: Client[]
 }

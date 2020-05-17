@@ -16,10 +16,27 @@ import { PurchaseListComponent } from './purchases/purchase-list/purchase-list.c
 import {PurchaseService} from "./purchases/shared/purchase.service";
 import { BookNewComponent } from './books/book-new/book-new.component';
 import { ClientNewComponent } from './clients/client-new/client-new.component';
-import { PurchaseNewComponent } from './purchases/purchase-new/purchase-new.component';
 import { ClientDeleteComponent } from './clients/client-delete/client-delete.component';
 import { BookUpdateComponent } from './books/book-update/book-update.component';
 import {FormsModule} from "@angular/forms";
+import { ClientUpdateComponent } from './clients/client-update/client-update.component';
+import {NgxPaginationModule} from "ngx-pagination";
+import { FilterPipe} from './clients/filter/filter.pipe';
+import {FilterTitlePipe} from "./books/filter/filterTitle.pipe";
+import { PurchaseNewComponent } from './purchases/purchase-new/purchase-new.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatListModule} from "@angular/material/list";
+import {MatTableModule} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatButtonModule} from "@angular/material/button";
+import { DialogUpdateComponent } from './purchases/dialog-update/dialog-update.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import { UpdatePurchaseClientComponent } from './purchases/update-purchase-client/update-purchase-client.component';
+import { UpdatePurchaseBookComponent } from './purchases/update-purchase-book/update-purchase-book.component';
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
@@ -32,16 +49,34 @@ import {FormsModule} from "@angular/forms";
     PurchaseListComponent,
     BookNewComponent,
     ClientNewComponent,
-    PurchaseNewComponent,
     ClientDeleteComponent,
-    BookUpdateComponent
+    BookUpdateComponent,
+    ClientUpdateComponent,
+    FilterPipe,
+    FilterTitlePipe,
+    PurchaseNewComponent,
+    DialogUpdateComponent,
+    UpdatePurchaseClientComponent,
+    UpdatePurchaseBookComponent
   ],
   imports: [
     BrowserModule,
     RouterModule,
     HttpClientModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    NgxPaginationModule,
+    BrowserAnimationsModule,
+    MatListModule,
+    MatTableModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatPaginatorModule
   ],
   providers: [BookService, ClientService, PurchaseService],
   bootstrap: [AppComponent]

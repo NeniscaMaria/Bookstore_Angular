@@ -7,6 +7,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ro.ubb.catalog.core.model.Book;
 import ro.ubb.catalog.core.model.Client;
 import ro.ubb.catalog.core.model.validators.Validator;
 import ro.ubb.catalog.core.model.validators.ValidatorException;
@@ -85,5 +86,31 @@ public class ClientServiceImpl implements ClientService{
     }
     public Optional<Client> findOneClient(Long clientID) {
         return repository.findById(clientID);
+    }
+
+    @Override
+    public Client addBookToClient(Client client, Book book) {
+        log.trace("addBookToClient - method entered: c={}", client);
+        client.getBooks().add(book);
+        repository.save(client);
+        log.trace("addBookToClient - updated: s={}", client);
+        return client;
+    }
+
+    @Override
+    public Set<Book> getBooks(Long id) {
+        log.trace("getBooks entered id={}",id);
+        Set<Book> result = repository.findById(id).get().getBooks();
+        log.trace("getBooks finished id={} b={}",id,result);
+        return result;
+    }
+
+    @Override
+    public Client removeBookFromClient(Client client, Book book) {
+        log.trace("removeBookFromClient - method entered: c={}", client);
+        client.getBooks().remove(book);
+        repository.save(client);
+        log.trace("removeBookFromClient - updated: s={}", client);
+        return client;
     }
 }

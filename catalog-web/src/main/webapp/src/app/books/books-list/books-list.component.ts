@@ -8,17 +8,21 @@ import {Router} from "@angular/router";
   selector: 'app-books-list',
   styleUrls: ['./books-list.component.css'],
   template: `<h2>Books</h2>
+  <input class = 'searchField' [(ngModel)]="searchText" placeholder="Search by title..">
   <ol class="books">
-    <li *ngFor="let book of books " routerLink="/book/update/{{book.id}}" >
+    <li *ngFor="let book of books | filter: searchText | paginate: {itemsPerPage: 5, currentPage: p}" routerLink="/book/update/{{book.id}}" >
       {{book.title}}
       <button class="deletebtn" (click)="deleteBook(book.id)">
         Delete
       </button>
     </li>
-  </ol>`
+  </ol>
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>`
 })
 export class BooksListComponent implements OnInit {
   books: Book[];
+  p: number = 1;
+  searchText: string;
   constructor(private booksService: BookService,private location: Location,private router: Router) { }
 
   ngOnInit(): void {
@@ -27,10 +31,8 @@ export class BooksListComponent implements OnInit {
 
   deleteBook(id:number){
     console.log("deleting book", id);
-    // @ts-ignore
     this.booksService.deleteBook(id)
       .subscribe(book=>console.log("deleted book: ",book));
     window.location.reload();
   }
-
 }

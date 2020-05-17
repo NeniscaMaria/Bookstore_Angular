@@ -7,7 +7,16 @@
   padding: 0;
   width: 15em;
 }
-button{
+input{
+  display: inline;
+  margin-top: 2em;
+}
+h2{
+  display: inline;
+  margin-right: 2em;
+  margin-top: 2em
+}
+button.deletebtn{
   margin-left: 17em;
   margin-top: -1.5em;
   border-radius: 8px;
@@ -18,7 +27,7 @@ button{
   float: left;
 }
 
-button:hover{
+button.deletebtn:hover{
   color: darkolivegreen;
   background-color: #CFD8DC;
 }

@@ -2,6 +2,7 @@ package ro.ubb.catalog.core.service;
 
 import org.springframework.data.domain.Sort;
 import ro.ubb.catalog.core.model.Book;
+import ro.ubb.catalog.core.model.Client;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,4 +17,7 @@ public interface BookService {
     void deleteBook(Long bookID);
     Optional<Book> findOne(Long bookID);
     Long findID(Book book);
+    Book addClientToBook(Book book, Client client);
+
+    Book removeClientFromBook(Book convertDtoToModel, Client convertDtoToModel1);
 }

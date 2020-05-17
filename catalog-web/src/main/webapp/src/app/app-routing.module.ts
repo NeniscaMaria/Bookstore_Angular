@@ -6,6 +6,8 @@ import {PurchasesComponent} from "./purchases/purchases.component";
 import {ClientNewComponent} from "./clients/client-new/client-new.component";
 import {BookNewComponent} from "./books/book-new/book-new.component";
 import {BookUpdateComponent} from "./books/book-update/book-update.component";
+import {ClientUpdateComponent} from "./clients/client-update/client-update.component";
+import {PurchaseNewComponent} from "./purchases/purchase-new/purchase-new.component";
 
 
 const routes: Routes = [
@@ -13,9 +15,11 @@ const routes: Routes = [
   {path: 'books', component: BooksComponent},
   {path: 'clients', component: ClientsComponent},
   {path: 'purchases', component: PurchasesComponent},
-  {path:'client/new', component: ClientNewComponent},
   {path:'book/new', component: BookNewComponent},
-  {path:'book/update/:id', component: BookUpdateComponent}
+  {path:'client/new', component: ClientNewComponent},
+  {path:'book/update/:id', component: BookUpdateComponent},
+  {path:'client/buy/:id', component: PurchaseNewComponent},
+  {path:'client/update/:id', component: ClientUpdateComponent}
 
 
 ];

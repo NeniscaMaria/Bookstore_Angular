@@ -1,5 +1,9 @@
 apply plugin: 'war'
 
+war{
+    zip64 true
+    exclude('node_modules')
+}
 dependencies {
     compile project(':catalog-core')
 

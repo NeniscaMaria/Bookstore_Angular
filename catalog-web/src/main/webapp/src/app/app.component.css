@@ -1,13 +1,3 @@
-h1 {
-  font-size: 1.2em;
-  color: #999;
-  margin-bottom: 0;
-}
-h2 {
-  font-size: 2em;
-  margin-top: 0;
-  padding-top: 0;
-}
 nav a {
   padding: 5px 10px;
   text-decoration: none;
@@ -18,13 +8,33 @@ nav a {
   color: black;
   border: 2px solid #e7e7e7;
 }
-nav a:visited, a:link {
+li a:visited, a:link {
+  color: black;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: lightgray;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  color: darkslategrey;
+  background-color: white;
+}
+a:active {
   color: gray;
-}
-nav a:hover {
-  color: darkolivegreen;
-  background-color: #CFD8DC;
-}
-nav a.active {
-  color: olive;
 }

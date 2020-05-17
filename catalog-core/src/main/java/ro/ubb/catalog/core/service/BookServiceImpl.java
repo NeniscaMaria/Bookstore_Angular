@@ -73,8 +73,25 @@ public class BookServiceImpl implements BookService {
         s.setYear(book.getYear());
         s.setPrice(book.getPrice());
         s.setInStock(book.getInStock());
-        log.debug("updateBook - updated: s={}", s);
+        log.trace("updateBook - updated: s={}", s);
         return s;
+    }
+
+    public Book addClientToBook(Book book, Client client){
+        log.trace("addClientToBook - method entered: book={}", book);
+        book.getClients().add(client);
+        repository.save(book);
+        log.trace("addClientToBook - finished: s={}", book);
+        return book;
+    }
+
+    @Override
+    public Book removeClientFromBook(Book book, Client client) {
+        log.trace("removeClientFromBook - method entered: book={}", book);
+        book.getClients().remove(client);
+        repository.save(book);
+        log.trace("removeClientFromBook - finished: s={}", book);
+        return book;
     }
 
     public void deleteBook(Long bookID) throws ValidatorException {

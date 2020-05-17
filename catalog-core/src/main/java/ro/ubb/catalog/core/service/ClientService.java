@@ -1,6 +1,7 @@
 package ro.ubb.catalog.core.service;
 
 import org.springframework.data.domain.Sort;
+import ro.ubb.catalog.core.model.Book;
 import ro.ubb.catalog.core.model.Client;
 import ro.ubb.catalog.core.model.validators.ValidatorException;
 
@@ -16,4 +17,8 @@ public interface ClientService {
     List<Client> getAllClients();
     Set<Client> filterClientsByName(String s);
     Optional<Client> findOneClient(Long clientID);
+    Client addBookToClient(Client client, Book book);
+    Set<Book> getBooks(Long id);
+
+    Client removeBookFromClient(Client convertDtoToModel, Book convertDtoToModel1);
 }

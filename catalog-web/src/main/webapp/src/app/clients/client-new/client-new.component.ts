@@ -21,10 +21,10 @@ export class ClientNewComponent implements OnInit {
       id: 0,
       serialNumber,
       name,
+      books:[]
     })
       .subscribe(client => console.log("saved client: ", client));
 
-    this.location.back(); // ...
   }
 
 }

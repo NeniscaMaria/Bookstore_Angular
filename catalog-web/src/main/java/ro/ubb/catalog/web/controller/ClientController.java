@@ -7,11 +7,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
+import ro.ubb.catalog.core.model.Book;
+import ro.ubb.catalog.core.model.Client;
 import ro.ubb.catalog.core.service.ClientService;
+import ro.ubb.catalog.web.converter.BookConverter;
 import ro.ubb.catalog.web.converter.ClientConverter;
+import ro.ubb.catalog.web.dto.BookDto;
+import ro.ubb.catalog.web.dto.BooksDto;
 import ro.ubb.catalog.web.dto.ClientDto;
-import ro.ubb.catalog.web.dto.ClientsDto;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -21,13 +26,22 @@ public class ClientController {
     private ClientService clientService;
     @Autowired
     private ClientConverter clientConverter;
+    @Autowired
+    private BookConverter bookConverter;
 
     @RequestMapping(value = "/clients",method = RequestMethod.GET)
     Set<ClientDto> getClients(){
         log.trace("getClients - method entered");
-        Set<ClientDto> result = clientConverter.convertModelsToDtos(clientService.getAllClients());
-        log.trace("getClients - method finished. Returns clients={}",result);
-        return result;
+        List<Client> clients = clientService.getAllClients();
+        System.out.println("hello");
+        try {
+            Set<ClientDto> result = clientConverter.convertModelsToDtos(clients);
+            log.trace("getClients - method finished");
+            return result;
+        }catch(StackOverflowError se){
+            System.out.println("stack overflow go brr");
+        }
+        return null;
     }
 
     @RequestMapping(value = "/clients", method = RequestMethod.POST)
@@ -59,11 +73,11 @@ public class ClientController {
     }
 
     @RequestMapping(value = "/clients/filter/{name}", method = RequestMethod.GET)
-    ClientsDto filterByName(@PathVariable String name){
+    Set<ClientDto> filterByName(@PathVariable String name){
         log.trace("filterByName - method entered name={}",name);
-        ClientsDto result = new ClientsDto(clientConverter.convertModelsToDtos(
+        Set<ClientDto> result = clientConverter.convertModelsToDtos(
                 clientService.filterClientsByName(name)
-        ));
+        );
         log.trace("filterByName - method finished returns c={}",result);
         return result;
     }
@@ -78,13 +92,46 @@ public class ClientController {
         return result;
     }
 
+    @RequestMapping(value = "/clients/purchase/{id}",method = RequestMethod.PUT)
+    ClientDto addBookToClient(@PathVariable Long id, @RequestBody BookDto bookDto){
+        log.trace("addBookToClient - method entered id={}, b={}",id,bookDto);
+        ClientDto clientDto = findOneClient(id);
+        Client result = clientService.addBookToClient(clientConverter.convertDtoToModel(clientDto),
+                bookConverter.convertDtoToModel(bookDto));
+        log.trace("addBookToClient - method finished returns c={}",result);
+        return clientConverter.convertModelToDto(result);
+    }
+
+    @RequestMapping(value = "/clients/purchase/remove/{id}",method = RequestMethod.PUT)
+    ClientDto removeBookFromClient(@PathVariable Long id, @RequestBody BookDto bookDto){
+        log.trace("removeBookFromClient - method entered id={}, b={}",id,bookDto);
+        ClientDto clientDto = findOneClient(id);
+        Client result = clientService.removeBookFromClient(clientConverter.convertDtoToModel(clientDto),
+                bookConverter.convertDtoToModel(bookDto));
+        log.trace("removeBookFromClient - method finished returns c={}",result);
+        return clientConverter.convertModelToDto(result);
+    }
+
+
+    @RequestMapping(value = "/clients/purchase/get/{id}",method = RequestMethod.PUT)
+    Set<BookDto> getPurchases(@PathVariable Long id){
+        log.trace("getPurchases - method entered ");
+        ClientDto client = findOneClient(id);
+        Set<BookDto> result = bookConverter.convertModelsToDtos(clientService.getBooks(id));
+        log.trace("getPurchases - method finished r={}",result);
+        return result;
+    }
+
     @RequestMapping(value = "/sort/clients/{dir}", method = RequestMethod.POST)
-    ClientsDto sort(@PathVariable Sort.Direction dir, @RequestBody String ...a ){
-        log.trace("sort - method entered dir={} args={}",dir,a);
-        ClientsDto result = new ClientsDto(clientConverter.convertModelsToDtos(
+    Set<ClientDto> sort(@PathVariable Sort.Direction dir, @RequestBody String ...a ){
+        /*log.trace("sort - method entered dir={} args={}",dir,a);
+        Set<ClientDto> result = new clientConverter.convertModelsToDtos(
                 clientService.sort(dir,a)
-        ));
+        );
         log.trace("sort finished returns c={}",result);
         return result;
+
+         */
+        return null;
     }
 }

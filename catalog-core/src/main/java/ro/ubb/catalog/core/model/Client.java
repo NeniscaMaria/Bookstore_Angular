@@ -1,5 +1,4 @@
 package ro.ubb.catalog.core.model;
-
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,8 +8,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true,exclude = "books")
 @Builder
 @Table(name="client")
 public class Client extends BaseEntity<Long> {
@@ -18,7 +16,14 @@ public class Client extends BaseEntity<Long> {
     private String serialNumber;
     @Column(nullable=false)
     private String name;
-    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "client")
-    private Set<Purchase> purchaseSet;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "clients")
+    private Set<Book> books;
+    @Override
+    public String toString() {
+        return "Client{" +
+                "serialNumber='" + serialNumber + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 
 }

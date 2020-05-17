@@ -7,10 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
+import ro.ubb.catalog.core.model.Book;
 import ro.ubb.catalog.core.service.BookService;
 import ro.ubb.catalog.web.converter.BookConverter;
+import ro.ubb.catalog.web.converter.ClientConverter;
 import ro.ubb.catalog.web.dto.BooksDto;
 import ro.ubb.catalog.web.dto.BookDto;
+import ro.ubb.catalog.web.dto.ClientDto;
 
 import java.util.Set;
 
@@ -21,6 +24,8 @@ public class BookController {
     private BookService bookService;
     @Autowired
     private BookConverter bookConverter;
+    @Autowired
+    private ClientConverter clientConverter;
 
     @RequestMapping(value = "/books",method = RequestMethod.GET)
     Set<BookDto> getBooks(){
@@ -75,6 +80,26 @@ public class BookController {
         );
         log.trace("findOneBook finished returns c={}",result);
         return result;
+    }
+
+    @RequestMapping(value = "/books/purchase/{id}",method = RequestMethod.PUT)
+    BookDto addClientToBook(@PathVariable Long id, @RequestBody ClientDto clientDto){
+        log.trace("addClientToBook - method entered id={}, c={}",id,clientDto);
+        BookDto bookDto = findOneBook(id);
+        Book result = bookService.addClientToBook(bookConverter.convertDtoToModel(bookDto),
+                clientConverter.convertDtoToModel(clientDto));
+        log.trace("addClientToBook - method finished returns b={}",result);
+        return bookConverter.convertModelToDto(result);
+    }
+
+    @RequestMapping(value = "/books/purchase/remove/{id}",method = RequestMethod.PUT)
+    BookDto removeClientFromBook(@PathVariable Long id, @RequestBody ClientDto clientDto){
+        log.trace("removeClientFromBook - method entered id={}, c={}",id,clientDto);
+        BookDto bookDto = findOneBook(id);
+        Book result = bookService.removeClientFromBook(bookConverter.convertDtoToModel(bookDto),
+                clientConverter.convertDtoToModel(clientDto));
+        log.trace("removeClientFromBook - method finished returns b={}",result);
+        return bookConverter.convertModelToDto(result);
     }
 
     @RequestMapping(value = "/sort/books/{dir}", method = RequestMethod.POST)

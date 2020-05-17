@@ -2,8 +2,10 @@ package ro.ubb.catalog.web.dto;
 
 
 import lombok.*;
+import ro.ubb.catalog.core.model.Client;
 
 import javax.persistence.Column;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor

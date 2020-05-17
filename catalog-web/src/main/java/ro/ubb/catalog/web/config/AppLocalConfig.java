@@ -3,10 +3,6 @@ package ro.ubb.catalog.web.config;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import ro.ubb.catalog.core.config.JPAConfig;
-import ro.ubb.catalog.core.model.Purchase;
-import ro.ubb.catalog.core.model.validators.BookValidator;
-import ro.ubb.catalog.core.model.validators.ClientValidator;
-import ro.ubb.catalog.core.model.validators.PurchaseValidator;
 
 
 @Configuration

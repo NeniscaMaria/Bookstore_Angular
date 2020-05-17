@@ -5,8 +5,9 @@ button{
   color: black;
   border: 2px solid #e7e7e7;
   padding: 0.5em;
+  float: right;
 }
 button:hover {
-  color: darkolivegreen;
+  color: darkslategrey;
   background-color: #CFD8DC;
 }

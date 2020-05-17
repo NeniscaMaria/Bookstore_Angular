@@ -1,16 +1,10 @@
-<label>Serial number:
-  <input #serialNumber/>
-  <br/>
-</label>
-
-<label>Name:
-  <input #name/>
-  <br/>
-</label>
-
-
-<button (click)="saveClient(serialNumber.value,name.value)">
-  Save
-</button>
-
-
+<div mat-dialog-content>
+  <p>Add new client:</p>
+</div>
+<label>Serial number:<input #serialNumber/></label>
+<br>
+<label>Name:<br><input #name/></label>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close="" (click)="saveClient(serialNumber.value,name.value)">Save</button>
+  <button mat-button  cdkFocusInitial>Cancel</button>
+</div>
