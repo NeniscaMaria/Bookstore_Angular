@@ -11,12 +11,14 @@ import ro.ubb.catalog.core.model.Book;
 import ro.ubb.catalog.core.model.Client;
 import ro.ubb.catalog.core.model.validators.Validator;
 import ro.ubb.catalog.core.model.validators.ValidatorException;
+import ro.ubb.catalog.core.repository.BookRepository;
+import ro.ubb.catalog.core.repository.ClientRepository;
 import ro.ubb.catalog.core.repository.Repository;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import javax.persistence.EntityManagerFactory;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -24,7 +26,7 @@ import java.util.stream.StreamSupport;
 public class ClientServiceImpl implements ClientService{
     private static final Logger log = LoggerFactory.getLogger(ClientServiceImpl.class);
     @Autowired
-    private Repository<Long, Client> repository;
+    private ClientRepository repository;
     @Autowired
     private Validator<Client> validator;
 
@@ -70,7 +72,7 @@ public class ClientServiceImpl implements ClientService{
 
     public List<Client> getAllClients() {
         log.trace("getAllClients - method entered");
-        List<Client> clients = repository.findAll();
+        List<Client> clients = repository.findAllWithPurchases();
         log.trace("getAllClients - method finished and returned clients={}",clients);
         return clients;
     }
@@ -84,20 +86,34 @@ public class ClientServiceImpl implements ClientService{
         log.trace("filterClientsByname - method finished and returned c={}",filteredClients);
         return filteredClients;
     }
+
+    @Transactional
     public Optional<Client> findOneClient(Long clientID) {
-        return repository.findById(clientID);
+        log.trace("findOneClient - method entered id={}",clientID);
+        Optional<Client> client = repository.findById(clientID);
+        log.trace("findOneClient - method finsihed c={}",client);
+        return client;
     }
 
     @Override
-    public Client addBookToClient(Client client, Book book) {
-        log.trace("addBookToClient - method entered: c={}", client);
-        client.getBooks().add(book);
+    public Client addBookToClient(Client client, Book book, String date) {
+        log.trace("addBookToClient - method entered: c={} b={} d={}", client,book,date);
+        if(date.equals("a"))
+            client.addDate(book,new Date());
+        else{
+            try {
+                client.addDate(book, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date));
+            } catch (ParseException e) {
+                log.trace("error at parsing date d={}"+e.getMessage(),date);
+            }
+        }
         repository.save(client);
         log.trace("addBookToClient - updated: s={}", client);
         return client;
     }
 
     @Override
+    @Transactional
     public Set<Book> getBooks(Long id) {
         log.trace("getBooks entered id={}",id);
         Set<Book> result = repository.findById(id).get().getBooks();
@@ -106,11 +122,12 @@ public class ClientServiceImpl implements ClientService{
     }
 
     @Override
-    public Client removeBookFromClient(Client client, Book book) {
-        log.trace("removeBookFromClient - method entered: c={}", client);
-        client.getBooks().remove(book);
-        repository.save(client);
-        log.trace("removeBookFromClient - updated: s={}", client);
-        return client;
+    public int removePurchase(Client client, Book book) {
+        log.trace("removePurchase - method entered c={} b={}",client,book);
+        int result = repository.deletePurchaseJPQL(client,book);
+        log.trace("removePurchase - method finished r={}",result);
+        return result;
     }
+
+
 }

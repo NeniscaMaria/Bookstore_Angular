@@ -16,9 +16,8 @@ import { PurchaseListComponent } from './purchases/purchase-list/purchase-list.c
 import {PurchaseService} from "./purchases/shared/purchase.service";
 import { BookNewComponent } from './books/book-new/book-new.component';
 import { ClientNewComponent } from './clients/client-new/client-new.component';
-import { ClientDeleteComponent } from './clients/client-delete/client-delete.component';
 import { BookUpdateComponent } from './books/book-update/book-update.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { ClientUpdateComponent } from './clients/client-update/client-update.component';
 import {NgxPaginationModule} from "ngx-pagination";
 import { FilterPipe} from './clients/filter/filter.pipe';
@@ -49,7 +48,6 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     PurchaseListComponent,
     BookNewComponent,
     ClientNewComponent,
-    ClientDeleteComponent,
     BookUpdateComponent,
     ClientUpdateComponent,
     FilterPipe,
@@ -76,7 +74,8 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     MatCheckboxModule,
     MatButtonModule,
     MatDialogModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    ReactiveFormsModule
   ],
   providers: [BookService, ClientService, PurchaseService],
   bootstrap: [AppComponent]

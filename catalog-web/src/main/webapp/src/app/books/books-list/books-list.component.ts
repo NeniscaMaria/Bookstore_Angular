@@ -19,7 +19,7 @@ import {BookUpdateComponent} from "../book-update/book-update.component";
   <mat-form-field>
     <mat-label>Filter after title</mat-label>
     <label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Ion">
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ex. em">
     </label>
   </mat-form-field>
 
@@ -153,7 +153,7 @@ export class BooksListComponent implements OnInit {
   }
   private openDialog(id:number): void {
     const dialogRef = this.dialog.open(BookUpdateComponent, {
-      width: '20em',
+      width: '100%',
       data:id
     });
 

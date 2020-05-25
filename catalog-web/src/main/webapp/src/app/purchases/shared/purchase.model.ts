@@ -5,12 +5,10 @@ import {Book} from "../../books/shared/book.model";
 export class Purchase{
   client: Client;
   book: Book;
-  name:string;
-  title: string;
-  constructor(client: Client, book: Book,name:string,title:string) {
+  date: string;
+  constructor(client: Client, book: Book,date:string) {
     this.client = client;
     this.book = book;
-    this.name = name;
-    this.title = title;
+    this.date = date;
   }
 }

@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {BookService} from "../shared/book.service";
 import {ActivatedRoute} from "@angular/router";
-import {NgForm} from "@angular/forms";
+import {FormBuilder, FormGroup, NgForm, Validators} from "@angular/forms";
 import {Location} from "@angular/common";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
@@ -38,11 +38,11 @@ export class BookUpdateComponent implements OnInit {
     console.log("updateBook:",form.value,this.id);
     var newValues = form.value;
     var title = newValues['title'];
-    var serialNumber = newValues['serialNumber'];
+    var serialNumber = this.serialNumber;
     var author = newValues['author'];
     var year = newValues['year'];
     var price = newValues['price'];
-    var inStock = newValues['inStock'];
+    var inStock = newValues['instock'];
     this.bookService.updateBook({
       id:this.id,
       serialNumber,

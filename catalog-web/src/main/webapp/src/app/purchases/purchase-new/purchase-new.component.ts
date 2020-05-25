@@ -41,8 +41,8 @@ export class PurchaseNewComponent implements OnInit {
     this.books.showDetails(this.selectedOptions[0])
       .subscribe(book=> {
         var c = this.client;
-        this.clientService.addBookToClient(c,book).subscribe(a=>
-          this.books.addClientToBook(c,book).subscribe(b=>
+        this.clientService.addBookToClient(c,book,"a").subscribe(a=>
+          this.books.addClientToBook(c,book,"").subscribe(b=>
             console.log("book bought ",a,b))
         );
       }

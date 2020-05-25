@@ -12,11 +12,13 @@ import ro.ubb.catalog.core.model.Book;
 import ro.ubb.catalog.core.model.Client;
 import ro.ubb.catalog.core.model.validators.Validator;
 import ro.ubb.catalog.core.model.validators.ValidatorException;
+import ro.ubb.catalog.core.repository.BookRepository;
 import ro.ubb.catalog.core.repository.Repository;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+
+import javax.persistence.EntityManagerFactory;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -24,7 +26,7 @@ import java.util.stream.StreamSupport;
 public class BookServiceImpl implements BookService {
     private static final Logger log = LoggerFactory.getLogger(BookServiceImpl.class);
     @Autowired
-    private Repository<Long, Book> repository;
+    private BookRepository repository;
     @Autowired
     private Validator<Book> validator;
 
@@ -37,12 +39,15 @@ public class BookServiceImpl implements BookService {
         return result;
     }
 
+    @Transactional
     public List<Book> getAllBooks() {
         log.trace("getAllBooks - method entered");
         List<Book> result = repository.findAll();
         log.trace("getAllBooks - method finished. Returned: {}",result);
         return result;
     }
+
+    @Transactional
     public Set<Book> sort(Sort.Direction dir, String ...a ){
         log.trace("Books: sort - method entered dir={} filters={}",dir,a);
         Iterable<Book> books = repository.findAll(Sort.by(dir,a));
@@ -51,6 +56,8 @@ public class BookServiceImpl implements BookService {
         return result;
     }
 
+
+    @Transactional
     public Set<Book> filterBooksByTitle(String s) {
         log.trace("filterBooksByTitle - method entered title={}",s);
         Iterable<Book> books = repository.findAll();
@@ -77,9 +84,13 @@ public class BookServiceImpl implements BookService {
         return s;
     }
 
-    public Book addClientToBook(Book book, Client client){
-        log.trace("addClientToBook - method entered: book={}", book);
-        book.getClients().add(client);
+    public Book addClientToBook(Book book, Client client, String date) {
+        log.trace("addClientToBook - method entered: book={} c={} d={}", book,client,date);
+        try {
+            book.addDate(client, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date));
+        } catch (ParseException e) {
+            book.addDate(client,new Date());
+        }
         repository.save(book);
         log.trace("addClientToBook - finished: s={}", book);
         return book;
@@ -87,8 +98,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book removeClientFromBook(Book book, Client client) {
-        log.trace("removeClientFromBook - method entered: book={}", book);
-        book.getClients().remove(client);
+        log.trace("removeClientFromBook - method entered: book={} client={}", book,client);
+        book.removeClient(client);
         repository.save(book);
         log.trace("removeClientFromBook - finished: s={}", book);
         return book;
@@ -105,13 +116,16 @@ public class BookServiceImpl implements BookService {
         log.trace("deleteBook - method finished");
     }
 
+    @Transactional
     public Optional<Book> findOne(Long bookID) {
         log.trace("findOne book - method entered id={}",bookID);
-        log.trace("findOne book - method finished");
-        return repository.findById(bookID);
+        Optional<Book> result = repository.findById(bookID);
+        log.trace("findOne book - method finished b={}",result);
+        return result;
     }
 
     @Override
+    @Transactional
     public Long findID(Book book) {
         log.trace("findID - method entered book={}",book);
         Optional<Book> result = repository.findOne(Example.of(book));

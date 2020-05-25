@@ -33,14 +33,14 @@ export class BookService{
     return this.httpClient.get<Book>(this.bookURL + "/" + id);
   }
 
-  updateBook(book: { serialNumber: any; year: any; author: any; price: any; inStock: any; id: number; title: any }): Observable<Book>{
+  updateBook(book: { serialNumber: string; year: any; author: any; price: any; inStock: any; id: number; title: any }): Observable<Book>{
     console.log("update book",book);
     return this.httpClient.put<Book>(this.bookURL+"/"+book.id,book);
   }
 
-  addClientToBook(c: Client, book: Book) {
-    console.log("add client to book",c,book);
-    return this.httpClient.put<Book>(this.bookURL+"/purchase/"+book.id,c);
+  addClientToBook(c: Client, book: Book, date: string) {
+    console.log("add client to book",c,book,date);
+    return this.httpClient.put<Book>(this.bookURL+"/purchase/"+book.id+"/"+date,c);
   }
 
   removeClientFromBook(book: Book, client: Client) : Observable<Book>{

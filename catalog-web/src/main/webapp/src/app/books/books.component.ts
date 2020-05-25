@@ -18,8 +18,8 @@ export class BooksComponent implements OnInit {
 
   addNewBook(){
     console.log("add new book button clicked");
-    //this.router.navigate(["book/new"]);
-    this.openDialog();
+    this.router.navigate(["book/new"]);
+    //this.openDialog();
   }
   private openDialog(): void {
     const dialogRef = this.dialog.open(BookNewComponent, {

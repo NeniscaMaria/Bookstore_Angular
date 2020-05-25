@@ -13,4 +13,5 @@ import java.util.Set;
 public class ClientDto extends BaseDto{
     private String serialNumber;
     private String name;
+    private Set<Long> purchases;
 }

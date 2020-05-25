@@ -5,6 +5,7 @@ import ro.ubb.catalog.core.model.Book;
 import ro.ubb.catalog.core.model.Client;
 import ro.ubb.catalog.core.model.validators.ValidatorException;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -17,8 +18,8 @@ public interface ClientService {
     List<Client> getAllClients();
     Set<Client> filterClientsByName(String s);
     Optional<Client> findOneClient(Long clientID);
-    Client addBookToClient(Client client, Book book);
+    Client addBookToClient(Client client, Book book,String date) ;
     Set<Book> getBooks(Long id);
 
-    Client removeBookFromClient(Client convertDtoToModel, Book convertDtoToModel1);
+    int removePurchase(Client client,Book book);
 }

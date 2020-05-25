@@ -19,14 +19,15 @@ export class UpdatePurchaseClientComponent implements OnInit {
   client: number;
   selectedOptions: number[];
   constructor(private clientService: ClientService) {
-    this.clientService.getClients().subscribe(b=>this.clientList=b);
+    this.clientService.getClients().subscribe(c=>this.clientList=c);
   }
 
   ngOnInit(): void {
   }
 
   onNgModelChange(event,selection:MatListOption[]){
-    if(selection.length>1) {
+    if (selection.length <= 1) {
+    } else {
       selection.reverse();
       selection.pop();
     }

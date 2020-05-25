@@ -47,7 +47,7 @@ public class CacheConfig {
   class CustomRemovalListener implements RemovalListener<Object, Object> {
     @Override
     public void onRemoval(Object key, Object value, RemovalCause cause) {
-      System.out.format("removal listerner called with key [%s], cause [%s], evicted [%S]\n",
+      System.out.format("removal listener called with key [%s], cause [%s], evicted [%S]\n",
         key, cause.toString(), cause.wasEvicted());
     }
   }

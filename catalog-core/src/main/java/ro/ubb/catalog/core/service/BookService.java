@@ -4,6 +4,7 @@ import org.springframework.data.domain.Sort;
 import ro.ubb.catalog.core.model.Book;
 import ro.ubb.catalog.core.model.Client;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -17,7 +18,7 @@ public interface BookService {
     void deleteBook(Long bookID);
     Optional<Book> findOne(Long bookID);
     Long findID(Book book);
-    Book addClientToBook(Book book, Client client);
+    Book addClientToBook(Book book, Client client, String date) throws ParseException;
 
     Book removeClientFromBook(Book convertDtoToModel, Client convertDtoToModel1);
 }

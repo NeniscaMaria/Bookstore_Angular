@@ -8,7 +8,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
-
 public class Initializer implements WebApplicationInitializer {
 
     public void onStartup(ServletContext container)

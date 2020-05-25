@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import ro.ubb.catalog.core.model.Book;
 import ro.ubb.catalog.core.model.Client;
+import ro.ubb.catalog.core.service.BookService;
 import ro.ubb.catalog.core.service.ClientService;
 import ro.ubb.catalog.web.converter.BookConverter;
 import ro.ubb.catalog.web.converter.ClientConverter;
@@ -18,6 +19,7 @@ import ro.ubb.catalog.web.dto.ClientDto;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 public class ClientController {
@@ -26,6 +28,8 @@ public class ClientController {
     private ClientService clientService;
     @Autowired
     private ClientConverter clientConverter;
+    @Autowired
+    private BookService bookService;
     @Autowired
     private BookConverter bookConverter;
 
@@ -85,53 +89,36 @@ public class ClientController {
     @RequestMapping(value = "/clients/find/{id}", method = RequestMethod.GET)
     ClientDto findOneClient(@PathVariable Long id){
         log.trace("findOneClient - method entered id={}",id);
-        ClientDto result = clientConverter.convertModelToDto(
-                clientService.findOneClient(id).get()
-        );
+        ClientDto result = clientConverter.convertModelToDto(clientService.findOneClient(id).get());
         log.trace("findOneClient finished returns c={}",result);
         return result;
     }
 
-    @RequestMapping(value = "/clients/purchase/{id}",method = RequestMethod.PUT)
-    ClientDto addBookToClient(@PathVariable Long id, @RequestBody BookDto bookDto){
+    @RequestMapping(value = "/clients/purchase/{id}/{date}",method = RequestMethod.PUT)
+    ClientDto addBookToClient(@PathVariable Long id,@PathVariable String date, @RequestBody BookDto bookDto){
         log.trace("addBookToClient - method entered id={}, b={}",id,bookDto);
         ClientDto clientDto = findOneClient(id);
         Client result = clientService.addBookToClient(clientConverter.convertDtoToModel(clientDto),
-                bookConverter.convertDtoToModel(bookDto));
+                bookConverter.convertDtoToModel(bookDto),date);
         log.trace("addBookToClient - method finished returns c={}",result);
         return clientConverter.convertModelToDto(result);
     }
 
     @RequestMapping(value = "/clients/purchase/remove/{id}",method = RequestMethod.PUT)
-    ClientDto removeBookFromClient(@PathVariable Long id, @RequestBody BookDto bookDto){
-        log.trace("removeBookFromClient - method entered id={}, b={}",id,bookDto);
-        ClientDto clientDto = findOneClient(id);
-        Client result = clientService.removeBookFromClient(clientConverter.convertDtoToModel(clientDto),
-                bookConverter.convertDtoToModel(bookDto));
-        log.trace("removeBookFromClient - method finished returns c={}",result);
-        return clientConverter.convertModelToDto(result);
+    int removePurchase(@PathVariable Long id, @RequestBody BookDto bookDto){
+        log.trace("removePurchase - method entered id={}, b={}",id,bookDto);
+        Client client = clientService.findOneClient(id).get();
+        int result = clientService.removePurchase(client,bookConverter.convertDtoToModel(bookDto));
+        log.trace("removePurchase - method finished c={}",result);
+        return result;
     }
-
 
     @RequestMapping(value = "/clients/purchase/get/{id}",method = RequestMethod.PUT)
     Set<BookDto> getPurchases(@PathVariable Long id){
         log.trace("getPurchases - method entered ");
-        ClientDto client = findOneClient(id);
         Set<BookDto> result = bookConverter.convertModelsToDtos(clientService.getBooks(id));
         log.trace("getPurchases - method finished r={}",result);
         return result;
     }
 
-    @RequestMapping(value = "/sort/clients/{dir}", method = RequestMethod.POST)
-    Set<ClientDto> sort(@PathVariable Sort.Direction dir, @RequestBody String ...a ){
-        /*log.trace("sort - method entered dir={} args={}",dir,a);
-        Set<ClientDto> result = new clientConverter.convertModelsToDtos(
-                clientService.sort(dir,a)
-        );
-        log.trace("sort finished returns c={}",result);
-        return result;
-
-         */
-        return null;
-    }
 }

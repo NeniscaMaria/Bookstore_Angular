@@ -27,7 +27,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableJpaRepositories({"ro.ubb.catalog.core.repository"})
 @EnableTransactionManagement
-//@EnableCaching
+@EnableCaching
 public class JPAConfig {
 
     @Value("${db.jdbcUrl}")
@@ -42,11 +42,7 @@ public class JPAConfig {
     @Value("${db.generateDDL}")
     private Boolean generateDDL;
 
-    /**
-     * http://www.baeldung.com/hikaricp
-     *
-     * @return
-     */
+
     @Bean
     public DataSource dataSource() {
         HikariConfig config = new HikariConfig();

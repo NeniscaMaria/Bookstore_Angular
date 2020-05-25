@@ -15,11 +15,12 @@ import ro.ubb.catalog.web.dto.BooksDto;
 import ro.ubb.catalog.web.dto.BookDto;
 import ro.ubb.catalog.web.dto.ClientDto;
 
+import java.text.ParseException;
 import java.util.Set;
 
 @RestController
 public class BookController {
-    public static final Logger log = LoggerFactory.getLogger(ClientController.class);
+    public static final Logger log = LoggerFactory.getLogger(BookController.class);
     @Autowired
     private BookService bookService;
     @Autowired
@@ -82,25 +83,16 @@ public class BookController {
         return result;
     }
 
-    @RequestMapping(value = "/books/purchase/{id}",method = RequestMethod.PUT)
-    BookDto addClientToBook(@PathVariable Long id, @RequestBody ClientDto clientDto){
-        log.trace("addClientToBook - method entered id={}, c={}",id,clientDto);
+    @RequestMapping(value = "/books/purchase/{id}/{date}",method = RequestMethod.PUT)
+    BookDto addClientToBook(@PathVariable Long id, @PathVariable String date, @RequestBody ClientDto clientDto) throws ParseException {
+        log.trace("addClientToBook - method entered id={}, c={},d={}",id,clientDto,date);
         BookDto bookDto = findOneBook(id);
         Book result = bookService.addClientToBook(bookConverter.convertDtoToModel(bookDto),
-                clientConverter.convertDtoToModel(clientDto));
+                clientConverter.convertDtoToModel(clientDto),date);
         log.trace("addClientToBook - method finished returns b={}",result);
         return bookConverter.convertModelToDto(result);
     }
 
-    @RequestMapping(value = "/books/purchase/remove/{id}",method = RequestMethod.PUT)
-    BookDto removeClientFromBook(@PathVariable Long id, @RequestBody ClientDto clientDto){
-        log.trace("removeClientFromBook - method entered id={}, c={}",id,clientDto);
-        BookDto bookDto = findOneBook(id);
-        Book result = bookService.removeClientFromBook(bookConverter.convertDtoToModel(bookDto),
-                clientConverter.convertDtoToModel(clientDto));
-        log.trace("removeClientFromBook - method finished returns b={}",result);
-        return bookConverter.convertModelToDto(result);
-    }
 
     @RequestMapping(value = "/sort/books/{dir}", method = RequestMethod.POST)
     BooksDto sort(@PathVariable Sort.Direction dir, @RequestBody String ...a ){

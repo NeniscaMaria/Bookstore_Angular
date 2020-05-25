@@ -36,13 +36,13 @@ export class ClientService{
     return this.httpClient.put<Client>(this.clientURL+"/"+client.id,client);
   }
 
-  addBookToClient(client:Client, book:Book): Observable<Client>{
-    console.log("add book to client",client,book);
-    return this.httpClient.put<Client>(this.clientURL+"/purchase/"+client.id,book);
+  addBookToClient(client:Client, book:Book,date:string): Observable<Client>{
+    console.log("add book to client",client,book,date);
+    return this.httpClient.put<Client>(this.clientURL+"/purchase/"+client.id+"/"+date,book);
   }
 
-  removeBookFromClient(client: Client, book: Book) : Observable<Client>{
+  removeBookFromClient(client: Client, book: Book) : Observable<number>{
     console.log("remove book from client:",book,client);
-    return this.httpClient.put<Client>(this.clientURL+"/purchase/remove/"+client.id,book);
+    return this.httpClient.put<number>(this.clientURL+"/purchase/remove/"+client.id,book);
   }
 }

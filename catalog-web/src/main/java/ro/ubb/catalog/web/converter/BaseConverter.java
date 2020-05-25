@@ -1,6 +1,7 @@
 package ro.ubb.catalog.web.converter;
 
 import ro.ubb.catalog.core.model.BaseEntity;
+import ro.ubb.catalog.core.model.Book;
 import ro.ubb.catalog.web.dto.BaseDto;
 import java.util.Collection;
 import java.util.Set;
@@ -15,6 +16,7 @@ public abstract class BaseConverter<Model extends BaseEntity<Long>, Dto extends 
                 .map(BaseEntity::getId)
                 .collect(Collectors.toSet());
     }
+
 
     public Set<Long> convertDTOsToIDs(Set<Dto> dtos) {
         return dtos.stream()
@@ -33,4 +35,6 @@ public abstract class BaseConverter<Model extends BaseEntity<Long>, Dto extends 
                 .map(this::convertDtoToModel)
                 .collect(Collectors.toSet());
     }
+
+    protected abstract Model convertIDToModel(Long id);
 }

@@ -2,28 +2,34 @@ package ro.ubb.catalog.core.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
+@Table(name = "purchase")
+@IdClass(PurchasePK.class)
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@Getter
+@Setter
+@EqualsAndHashCode
 @Builder
-@Table(name="purchase")
-public class Purchase extends BaseEntity<Long> {
-
-    @ManyToOne()
-    private Client client;
-    @ManyToOne
+public class Purchase {
+    @Id
+    @ManyToOne(optional=false,fetch = FetchType.LAZY)
+    @JoinColumn(name="bid")
     private Book book;
-    @Column
-    private int nrBooks;
 
+    @Id
+    @ManyToOne(optional=false,fetch = FetchType.LAZY)
+    @JoinColumn(name="cid")
+    private Client client;
 
+    @Column(name="date",nullable = false)
+    private Date date;
+
+    @Override
+    public String toString(){
+        return "Client id "+client.getId()+ " book id "+book.getId() + " date "+date;
+    }
 }

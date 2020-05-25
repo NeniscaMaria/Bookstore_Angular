@@ -11,25 +11,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {DialogUpdateComponent} from "../dialog-update/dialog-update.component";
 import {UpdatePurchaseBookComponent} from "../update-purchase-book/update-purchase-book.component";
 import {UpdatePurchaseClientComponent} from "../update-purchase-client/update-purchase-client.component";
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-];
 @Component({
   selector: 'app-purchase-list',
   templateUrl: './purchase-list.component.html',
@@ -41,7 +23,7 @@ export class PurchaseListComponent implements OnInit {
   choice: string;
   clientID: number;
   bookID : number;
-  displayedColumns: string[] = ['select','name','title'];
+  displayedColumns: string[] = ['select','name','title','date'];
   dataSource : MatTableDataSource<Purchase>;
   selection = new SelectionModel<Purchase>(true, []);
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -54,12 +36,15 @@ export class PurchaseListComponent implements OnInit {
       this.purchases = [];
       clients.forEach((client)=>
         this.purchaseService.getPurchases(client.id)
-          .subscribe(books =>{
-            if(books.length!=0) {
-              books.forEach((book) => {
-                var purchase = new Purchase(client, book,client.name,book.title);
-                this.purchases.push(purchase);
-                this.dataSource.data = this.purchases;
+          .subscribe(purchases =>{
+            if(purchases.length!=0) {
+              purchases.forEach((purchaseIDs) => {
+                console.log(purchaseIDs);
+                bookService.showDetails(purchaseIDs.bookID).subscribe(book=>{
+                  var purchase = new Purchase(client,book,purchaseIDs.date);
+                  this.purchases.push(purchase);
+                  this.dataSource.data = this.purchases;
+                })
               });
             }
           }));
@@ -93,7 +78,7 @@ export class PurchaseListComponent implements OnInit {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.name + 1}`;
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.book.title + 1}`;
   }
 
   deletePurchase() {
@@ -107,12 +92,16 @@ export class PurchaseListComponent implements OnInit {
         var client = purchase.client;
         var book = purchase.book;
         this.clientService.removeBookFromClient(client, book).subscribe(
-          b => this.bookService.removeClientFromBook(book, client)
-            .subscribe(c => {
-              console.log("purchase removed");
-              this.dataSource.data = this.purchases;
-              this.table.renderRows();
-            }));
+          b => {
+              if(b <= 0)
+                alert("failed to delete purchase!");
+              else {
+                console.log("purchase removed");
+                this.dataSource.data = this.purchases;
+                this.table.renderRows();
+                window.location.reload();
+              }
+            });
       });
     }
   }
@@ -168,14 +157,17 @@ export class PurchaseListComponent implements OnInit {
     console.log("update purchase client");
     var purchase = this.selection.selected[0];
     this.clientService.showDetails(this.clientID).subscribe(clientToAdd=>{
-        this.bookService.removeClientFromBook(purchase.book,purchase.client).subscribe(book=>{
-            this.bookService.addClientToBook(clientToAdd,purchase.book).subscribe(book2=>{
-              purchase.client = clientToAdd;
-              purchase.name = clientToAdd.name;
-              this.dataSource.data = this.purchases;
-              this.selection.selected.pop();
-              this.table.renderRows();
-            });
+        this.clientService.removeBookFromClient(purchase.client,purchase.book,).subscribe(rowsAffected=>{
+            if(rowsAffected<=0)
+              alert("Purchase update failed!");
+            else
+              this.clientService.addBookToClient(clientToAdd,purchase.book,purchase.date).subscribe(book2=>{
+                purchase.client = clientToAdd;
+                this.dataSource.data = this.purchases;
+                this.selection.selected.pop();
+                this.table.renderRows();
+                window.location.reload();
+              });
           });
       });
   }
@@ -198,14 +190,18 @@ export class PurchaseListComponent implements OnInit {
     console.log("update purchase book");
     var purchase = this.selection.selected[0];
     this.bookService.showDetails(this.bookID).subscribe(bookToAdd=>{
-      this.clientService.removeBookFromClient(purchase.client,purchase.book).subscribe(client=>{
-        this.clientService.addBookToClient(purchase.client,bookToAdd).subscribe(client2=>{
-          purchase.book = bookToAdd;
-          purchase.title = bookToAdd.title;
-          this.dataSource.data = this.purchases;
-          this.selection.selected.pop();
-          this.table.renderRows();
-        });
+      this.clientService.removeBookFromClient(purchase.client,purchase.book).subscribe(rowsAffected=>{
+        if(rowsAffected<=0)
+          alert("Purchase update failed!");
+        else
+          this.clientService.addBookToClient(purchase.client,bookToAdd,purchase.date).subscribe(client2=>{
+            console.log(client2,purchase.book,bookToAdd);
+            purchase.book = bookToAdd;
+            this.dataSource.data = this.purchases;
+            this.selection.selected.pop();
+            this.table.renderRows();
+            window.location.reload();
+          });
       });
     });
   }

@@ -20,4 +20,5 @@ public class BookDto extends BaseDto{
     private int year;
     private double price;
     private int inStock;
+    private Set<Long> purchases;
 }

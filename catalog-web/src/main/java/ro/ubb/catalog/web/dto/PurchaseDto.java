@@ -1,19 +1,17 @@
 package ro.ubb.catalog.web.dto;
 
 import lombok.*;
-import ro.ubb.catalog.core.model.Book;
-import ro.ubb.catalog.core.model.Client;
 
-import java.util.Set;
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@Getter
+@Setter
+@ToString
 @Builder
-public class PurchaseDto extends BaseDto{
-    private Book book;
-    private Client client;
-    private int nrBooks;
+public class PurchaseDto extends BaseDto {
+    private Long clientID;
+    private Long bookID;
+    private String date;
 }

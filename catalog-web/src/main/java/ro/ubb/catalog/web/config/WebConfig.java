@@ -7,11 +7,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-
-/**
- * Created by radu.
- */
-
 @Configuration
 @EnableWebMvc
 @ComponentScan({"ro.ubb.catalog.web.controller", "ro.ubb.catalog.web.converter"})

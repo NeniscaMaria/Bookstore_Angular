@@ -8,7 +8,6 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatDialog} from "@angular/material/dialog";
 import {UpdatePurchaseBookComponent} from "../../purchases/update-purchase-book/update-purchase-book.component";
 import {BookService} from "../../books/shared/book.service";
-import {BookUpdateComponent} from "../../books/book-update/book-update.component";
 import {ClientUpdateComponent} from "../client-update/client-update.component";
 
 @Component({
@@ -55,10 +54,10 @@ export class ClientListComponent implements OnInit {
     else{
       this.selection.selected.forEach((client)=>{
         var id = client.id;
+        this.clients.filter(c=>c!=client);
         this.clientService.deleteClient(id)
           .subscribe(c=>{
             console.log("deleted client: ",c);
-            this.clients.filter(c=>c!=client);
             this.dataSource.data = this.clients;
             this.selection.selected.pop();
             this.table.renderRows();
@@ -124,11 +123,9 @@ export class ClientListComponent implements OnInit {
     this.bookService.showDetails(this.bookID)
       .subscribe(book=> {
         this.clientService.showDetails(clientID).subscribe(client => {
-          this.clientService.addBookToClient(client, book).subscribe(a =>
-            this.bookService.addClientToBook(client, book).subscribe(b =>
-              console.log("book bought ", a, b)));
-        });
-      })
+          this.clientService.addBookToClient(client, book,"a").subscribe(a =>
+              console.log("book bought "));});
+      });
   }
 
   updateClient() {

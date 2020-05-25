@@ -1,8 +1,5 @@
 package ro.ubb.catalog.core.model;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,7 +8,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Data
+@Getter
+@Setter
 public class BaseEntity<ID extends Serializable> implements Serializable {
     @Id
     @GeneratedValue
