@@ -22,4 +22,5 @@ public interface ClientService {
     Set<Book> getBooks(Long id);
 
     int removePurchase(Client client,Book book);
+    List<Long> getClientIDsSortedByNumberOfPurchases();
 }

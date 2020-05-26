@@ -3,6 +3,7 @@ package ro.ubb.catalog.core.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -29,6 +30,8 @@ public class BookServiceImpl implements BookService {
     private BookRepository repository;
     @Autowired
     private Validator<Book> validator;
+    @Value("${db.method}")
+    private String method;
 
     public Book addBook(Book book){
         log.trace("addBook - method entered book={}",book);
@@ -56,15 +59,10 @@ public class BookServiceImpl implements BookService {
         return result;
     }
 
-
     @Transactional
     public Set<Book> filterBooksByTitle(String s) {
         log.trace("filterBooksByTitle - method entered title={}",s);
-        Iterable<Book> books = repository.findAll();
-
-        Set<Book> bookSet = new HashSet<>();
-        books.forEach(bookSet::add);
-        bookSet.removeIf(book -> !book.getTitle().contains(s));
+        Set<Book> bookSet = repository.filterBooksByTitle(s);
         log.trace("filterBooksByTitle - method finished. Returned : books={}",bookSet);
         return bookSet;
     }
@@ -96,15 +94,6 @@ public class BookServiceImpl implements BookService {
         return book;
     }
 
-    @Override
-    public Book removeClientFromBook(Book book, Client client) {
-        log.trace("removeClientFromBook - method entered: book={} client={}", book,client);
-        book.removeClient(client);
-        repository.save(book);
-        log.trace("removeClientFromBook - finished: s={}", book);
-        return book;
-    }
-
     public void deleteBook(Long bookID) throws ValidatorException {
         log.trace("deleteBook - method entered : id={}",bookID);
         try {
@@ -125,12 +114,38 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional
-    public Long findID(Book book) {
-        log.trace("findID - method entered book={}",book);
-        Optional<Book> result = repository.findOne(Example.of(book));
-        log.trace("findId - method finished res={}",result.get());
-        return result.get().getId();
+    public List<Long> getBookIDsSortedByNumberOfPurchases() {
+        log.trace("getBookIDsSortedByNumberOfPurchases - method entered m={}",method);
+        List<Long> result = new ArrayList<>();
+        try {
+            if(method.equals("JPQL"))
+                result = repository.getBookIDsSortedByNumberOfPurchasesJPQL();
+            else if(method.equals("Criteria"))
+                result = repository.getBooksIDsSortedByNumberOfPurchasesCriteria();
+            else if(method.equals("Native"))
+                result = repository.getBooksIDsSortedByNumberOfPurchasesNative();
+        }catch(Exception ex){
+            log.trace("error occurred "+ ex.getMessage() + " " + ex.getCause());
+        }
+        log.trace("getBookIDsSortedByNumberOfPurchases - method finished r={}",result);
+        return result;
     }
 
+    @Override
+    public int getTotalStock() {
+        log.trace("getTotalStock - method entered m={}",method);
+        int result = -1;
+        try {
+            if(method.equals("JPQL"))
+                result = repository.getTotalStockJPQL();
+            else if(method.equals("Criteria"))
+                result = repository.getTotalStockCriteria();
+            else if(method.equals("Native"))
+                result = repository.getTotalStockNative();
+        }catch(Exception ex){
+            log.trace("error occurred "+ ex.getMessage() + " " + ex.getCause());
+        }
+        log.trace("getTotalStock - method finished r={}",result);
+        return result;
+    }
 }

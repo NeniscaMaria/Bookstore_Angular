@@ -1,10 +1,11 @@
 package ro.ubb.catalog.core.model;
-
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.Date;
 
+@NamedEntityGraph(name = "purchases", attributeNodes = {
+        @NamedAttributeNode("client")
+})
 @Entity
 @Table(name = "purchase")
 @IdClass(PurchasePK.class)

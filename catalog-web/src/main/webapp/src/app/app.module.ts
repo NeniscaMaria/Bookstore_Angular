@@ -36,6 +36,8 @@ import {MatDialogModule} from "@angular/material/dialog";
 import { UpdatePurchaseClientComponent } from './purchases/update-purchase-client/update-purchase-client.component';
 import { UpdatePurchaseBookComponent } from './purchases/update-purchase-book/update-purchase-book.component';
 import {MatPaginatorModule} from "@angular/material/paginator";
+import { TopClientsComponent } from './clients/top-clients/top-clients.component';
+import { TopBooksComponent } from './books/top-books/top-books.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,9 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     PurchaseNewComponent,
     DialogUpdateComponent,
     UpdatePurchaseClientComponent,
-    UpdatePurchaseBookComponent
+    UpdatePurchaseBookComponent,
+    TopClientsComponent,
+    TopBooksComponent
   ],
   imports: [
     BrowserModule,

@@ -17,8 +17,8 @@ public interface BookService {
     Book updateBook(Long id, Book book);
     void deleteBook(Long bookID);
     Optional<Book> findOne(Long bookID);
-    Long findID(Book book);
     Book addClientToBook(Book book, Client client, String date) throws ParseException;
 
-    Book removeClientFromBook(Book convertDtoToModel, Client convertDtoToModel1);
+    List<Long> getBookIDsSortedByNumberOfPurchases();
+    int getTotalStock();
 }

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import ro.ubb.catalog.core.model.Book;
+import ro.ubb.catalog.core.model.Client;
 import ro.ubb.catalog.core.service.BookService;
 import ro.ubb.catalog.web.converter.BookConverter;
 import ro.ubb.catalog.web.converter.ClientConverter;
@@ -16,6 +17,8 @@ import ro.ubb.catalog.web.dto.BookDto;
 import ro.ubb.catalog.web.dto.ClientDto;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -93,7 +96,6 @@ public class BookController {
         return bookConverter.convertModelToDto(result);
     }
 
-
     @RequestMapping(value = "/sort/books/{dir}", method = RequestMethod.POST)
     BooksDto sort(@PathVariable Sort.Direction dir, @RequestBody String ...a ){
         log.trace("sort - method entered dir={} args={}",dir,a);
@@ -101,6 +103,28 @@ public class BookController {
                 bookService.sort(dir,a)
         ));
         log.trace("sort finished returns c={}",result);
+        return result;
+    }
+
+    @RequestMapping(value = "/books/filterpurchases",method = RequestMethod.GET)
+    List<BookDto> getBookIDsByNumberOfPurchases(){
+        log.trace("getBookIDsByNumberOfPurchases - method entered");
+        List<Long> ids = bookService.getBookIDsSortedByNumberOfPurchases();
+        List<BookDto> result = new ArrayList<>();
+        ids.forEach(id->{
+            Book book = bookService.findOne(id).get();
+            result.add(bookConverter.convertModelToDto(book));
+            log.trace("getBookIDsByNumberOfPurchases - added book {}",book);
+        });
+        log.trace("getBookIDsByNumberOfPurchases - method finished c={}",result);
+        return result;
+    }
+
+    @RequestMapping(value = "/books/getStock",method = RequestMethod.GET)
+    int getTotalStock(){
+        log.trace("getTotalStock - method entered");
+        int result = bookService.getTotalStock();
+        log.trace("getTotalStock - method finished c={}",result);
         return result;
     }
 }

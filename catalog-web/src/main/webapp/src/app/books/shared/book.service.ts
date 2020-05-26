@@ -43,9 +43,14 @@ export class BookService{
     return this.httpClient.put<Book>(this.bookURL+"/purchase/"+book.id+"/"+date,c);
   }
 
-  removeClientFromBook(book: Book, client: Client) : Observable<Book>{
-    console.log("removeClientFromBook ",book,client);
-    return this.httpClient.put<Book>(this.bookURL+"/purchase/remove/"+book.id,client);
 
+  getTopBooks() : Observable<Array<Book>>{
+    console.log("getTopBooks");
+    return this.httpClient.get<Array<Book>>(this.bookURL+"/filterpurchases");
+  }
+
+  getTotalStock() : Observable<number> {
+    console.log("getTotalStock");
+    return this.httpClient.get<number>(this.bookURL+"/getStock");
   }
 }

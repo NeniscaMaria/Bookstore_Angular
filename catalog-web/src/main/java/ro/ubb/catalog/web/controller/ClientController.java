@@ -17,6 +17,7 @@ import ro.ubb.catalog.web.dto.BookDto;
 import ro.ubb.catalog.web.dto.BooksDto;
 import ro.ubb.catalog.web.dto.ClientDto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -110,6 +111,20 @@ public class ClientController {
         Client client = clientService.findOneClient(id).get();
         int result = clientService.removePurchase(client,bookConverter.convertDtoToModel(bookDto));
         log.trace("removePurchase - method finished c={}",result);
+        return result;
+    }
+
+    @RequestMapping(value = "/clients/filterpurchases",method = RequestMethod.GET)
+    List<ClientDto> getClientIDsByNumberOfPurchases(){
+        log.trace("getClientIDsByNumberOfPurchases - method entered");
+        List<Long> ids = clientService.getClientIDsSortedByNumberOfPurchases();
+        List<ClientDto> result = new ArrayList<>();
+        ids.forEach(id->{
+            Client client = clientService.findOneClient(id).get();
+            result.add(clientConverter.convertModelToDto(client));
+            log.trace("getClientIDsByNumberOfPurchases - added client {}",client);
+        });
+        log.trace("getClientIDsByNumberOfPurchases - method finished c={}",result);
         return result;
     }
 

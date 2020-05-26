@@ -4,7 +4,6 @@ import {ClientService} from "../../clients/shared/client.service";
 import {Purchase} from "../shared/purchase.model";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
-import {BehaviorSubject} from "rxjs";
 import {SelectionModel} from "@angular/cdk/collections";
 import {BookService} from "../../books/shared/book.service";
 import {MatDialog} from "@angular/material/dialog";

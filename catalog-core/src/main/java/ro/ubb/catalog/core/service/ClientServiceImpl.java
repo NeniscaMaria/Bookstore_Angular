@@ -3,6 +3,7 @@ package ro.ubb.catalog.core.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ import ro.ubb.catalog.core.repository.ClientRepository;
 import ro.ubb.catalog.core.repository.Repository;
 
 import javax.persistence.EntityManagerFactory;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -29,6 +32,8 @@ public class ClientServiceImpl implements ClientService{
     private ClientRepository repository;
     @Autowired
     private Validator<Client> validator;
+    @Value("${db.method}")
+    private String method;
 
     public Client addClient(Client client) throws ValidatorException {
         log.trace("addClient - method entered client={}",client);
@@ -79,10 +84,7 @@ public class ClientServiceImpl implements ClientService{
 
     public Set<Client> filterClientsByName(String s)  {
         log.trace("filterClientsByName - method entered name={}",s);
-        Iterable<Client> clients = repository.findAll();
-        Set<Client> filteredClients= new HashSet<>();
-        clients.forEach(filteredClients::add);
-        filteredClients.removeIf(student -> !student.getName().contains(s));
+        Set<Client> filteredClients = repository.filterClientsAfterName(s);
         log.trace("filterClientsByname - method finished and returned c={}",filteredClients);
         return filteredClients;
     }
@@ -123,11 +125,37 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public int removePurchase(Client client, Book book) {
-        log.trace("removePurchase - method entered c={} b={}",client,book);
-        int result = repository.deletePurchaseJPQL(client,book);
+        log.trace("removePurchase - method entered c={} b={} method={}",client,book,method);
+        int result = -1;
+        if(method.equals("JPQL"))
+            result = repository.deletePurchaseJPQL(client,book);
+        else
+            if(method.equals("Criteria"))
+                result = repository.deletePurchaseCriteria(client,book);
+            else
+                if(method.equals("Native"))
+                    result = repository.deletePurchaseNative(client,book);
         log.trace("removePurchase - method finished r={}",result);
         return result;
     }
 
-
+    @Override
+    public List<Long> getClientIDsSortedByNumberOfPurchases() {
+        log.trace("getClientIDsSortedByNumberOfPurchases - method entered m={}",method);
+        List<Long> result = new ArrayList<>();
+        try {
+            if(method.equals("JPQL"))
+                result = repository.getClientsIDsSortedByNumberOfPurchasesJPQL();
+            else
+                if(method.equals("Criteria"))
+                    result = repository.getClientsIDsSortedByNumberOfPurchasesCriteria();
+                else
+                    if(method.equals("Native"))
+                        result = repository.getClientsIDsSortedByNumberOfPurchasesNative();
+        }catch(Exception ex){
+            log.trace("error occurred "+ ex.getMessage() + " " + ex.getCause());
+        }
+        log.trace("getClientIDsSortedByNumberOfPurchases - method finished r={}",result);
+        return result;
+    }
 }

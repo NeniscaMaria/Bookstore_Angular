@@ -23,7 +23,7 @@ allprojects {
 
         springDataVersion = '2.0.3.RELEASE'
 //        hibernateVersion = '5.2.10.Final'
-//        hibernateVersion = '5.2.13.Final'
+        //hibernateVersion = '5.2.13.Final'
         hibernateVersion = '5.2.6.Final'
         caffeineVersion = '2.6.1'
         hikariVersion = '2.7.7'

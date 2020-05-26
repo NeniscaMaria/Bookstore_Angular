@@ -45,4 +45,9 @@ export class ClientService{
     console.log("remove book from client:",book,client);
     return this.httpClient.put<number>(this.clientURL+"/purchase/remove/"+client.id,book);
   }
+
+  getFilteredClients() : Observable<Array<Client>>{
+    console.log("getFilteredClients");
+    return this.httpClient.get<Array<Client>>(this.clientURL+"/filterpurchases");
+  }
 }
