@@ -19,7 +19,7 @@ export class UpdatePurchaseClientComponent implements OnInit {
   client: number;
   selectedOptions: number[];
   constructor(private clientService: ClientService) {
-    this.clientService.getClients().subscribe(clients=>this.clientList=clients);
+    this.clientService.getClients().subscribe(cl=>this.clientList=cl);
   }
 
   ngOnInit(): void {

@@ -12,13 +12,13 @@ import ro.ubb.catalog.core.model.Book;
 import ro.ubb.catalog.core.model.Client;
 import ro.ubb.catalog.core.model.validators.Validator;
 import ro.ubb.catalog.core.model.validators.ValidatorException;
-import ro.ubb.catalog.core.repository.BookRepository;
-import ro.ubb.catalog.core.repository.ClientRepository;
-import ro.ubb.catalog.core.repository.Repository;
+import ro.ubb.catalog.core.repository.*;
 
 import javax.persistence.EntityManagerFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -127,14 +127,13 @@ public class ClientServiceImpl implements ClientService{
     public int removePurchase(Client client, Book book) {
         log.trace("removePurchase - method entered c={} b={} method={}",client,book,method);
         int result = -1;
-        if(method.equals("JPQL"))
-            result = repository.deletePurchaseJPQL(client,book);
-        else
-            if(method.equals("Criteria"))
-                result = repository.deletePurchaseCriteria(client,book);
-            else
-                if(method.equals("Native"))
-                    result = repository.deletePurchaseNative(client,book);
+        String function = "deletePurchase"+method;
+        try{
+            Method functionToUse = ClientRepositoryCustom.class.getMethod(function, new Class[]{Client.class, Book.class});
+            result = (int) functionToUse.invoke(repository,client,book);
+        }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException ex){
+            log.trace("removePurchase - {} {}",function,ex.getMessage());
+        }
         log.trace("removePurchase - method finished r={}",result);
         return result;
     }
@@ -143,17 +142,12 @@ public class ClientServiceImpl implements ClientService{
     public List<Long> getClientIDsSortedByNumberOfPurchases() {
         log.trace("getClientIDsSortedByNumberOfPurchases - method entered m={}",method);
         List<Long> result = new ArrayList<>();
-        try {
-            if(method.equals("JPQL"))
-                result = repository.getClientsIDsSortedByNumberOfPurchasesJPQL();
-            else
-                if(method.equals("Criteria"))
-                    result = repository.getClientsIDsSortedByNumberOfPurchasesCriteria();
-                else
-                    if(method.equals("Native"))
-                        result = repository.getClientsIDsSortedByNumberOfPurchasesNative();
-        }catch(Exception ex){
-            log.trace("error occurred "+ ex.getMessage() + " " + ex.getCause());
+        String function = "getClientsIDsSortedByNumberOfPurchases"+method;
+        try{
+            Method functionToUse = ClientRepositoryCustom.class.getMethod(function);
+            result = (List<Long>) functionToUse.invoke(repository,null);
+        }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException ex){
+            log.trace("getClientIDsSortedByNumberOfPurchases - {} {}",function,ex.getMessage());
         }
         log.trace("getClientIDsSortedByNumberOfPurchases - method finished r={}",result);
         return result;

@@ -18,6 +18,7 @@ import ro.ubb.catalog.web.dto.ClientDto;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -47,7 +48,6 @@ public class BookController {
         log.trace("saveBook - method finished client={}",result);
         return result;
     }
-
 
     @RequestMapping(value = "/books/{id}",method = RequestMethod.PUT)
     BookDto updateBook(@PathVariable Long id, @RequestBody BookDto bookDto){
@@ -109,13 +109,17 @@ public class BookController {
     @RequestMapping(value = "/books/filterpurchases",method = RequestMethod.GET)
     List<BookDto> getBookIDsByNumberOfPurchases(){
         log.trace("getBookIDsByNumberOfPurchases - method entered");
-        List<Long> ids = bookService.getBookIDsSortedByNumberOfPurchases();
         List<BookDto> result = new ArrayList<>();
-        ids.forEach(id->{
-            Book book = bookService.findOne(id).get();
-            result.add(bookConverter.convertModelToDto(book));
-            log.trace("getBookIDsByNumberOfPurchases - added book {}",book);
-        });
+        try{
+            List<Long> ids = bookService.getBookIDsSortedByNumberOfPurchases();
+            ids.forEach(id->{
+                Book book = bookService.findOne(id).get();
+                result.add(bookConverter.convertModelToDto(book));
+                log.trace("getBookIDsByNumberOfPurchases - added book {}",book);
+            });
+        }catch (Exception ex){
+            log.trace("getBookIDsByNumberOfPurchases - "+ex.getMessage()+ Arrays.toString(ex.getStackTrace()));
+        }
         log.trace("getBookIDsByNumberOfPurchases - method finished c={}",result);
         return result;
     }

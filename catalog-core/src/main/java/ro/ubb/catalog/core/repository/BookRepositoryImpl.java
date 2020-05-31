@@ -1,6 +1,6 @@
 package ro.ubb.catalog.core.repository;
 import org.hibernate.Session;
-import org.hibernate.ejb.HibernateEntityManager;
+import org.hibernate.jpa.HibernateEntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +13,7 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,8 +63,8 @@ public class BookRepositoryImpl extends CustomRepositorySupport implements BookR
         try {
             HibernateEntityManager hibernateEntityManager = getEntityManager().unwrap(HibernateEntityManager.class);
             Session session = hibernateEntityManager.getSession();
-            org.hibernate.Query query = session.createSQLQuery("select sum(b.instock) from book b ");
-            result = query.getFirstResult();
+            org.hibernate.Query query = session.createSQLQuery("select sum(instock) from book");
+            result = Integer.parseInt(query.getResultList().get(0).toString()) ;
         }catch (Exception ex){
             log.trace("getTotalStockNative an error occurred "+ex.getMessage()+" "+ex.getCause());
         }
@@ -72,7 +73,7 @@ public class BookRepositoryImpl extends CustomRepositorySupport implements BookR
     }
 
     @Override
-    public List<Long> getBookIDsSortedByNumberOfPurchasesJPQL() {
+    public List<Long> getBooksIDsSortedByNumberOfPurchasesJPQL() {
         log.trace("getBookIDsSortedByNumberOfPurchasesJPQL - method entered");
         EntityManager entityManager = getEntityManager();
         Query query = entityManager.createQuery("select a.book.id from Purchase a\n" +
@@ -109,14 +110,16 @@ public class BookRepositoryImpl extends CustomRepositorySupport implements BookR
     @Transactional
     public List<Long> getBooksIDsSortedByNumberOfPurchasesNative() {
         log.trace("getBooksIDsSortedByNumberOfPurchasesNative - method entered");
-        List result = new ArrayList();
+        List<Long> result = new ArrayList();
         try {
             HibernateEntityManager hibernateEntityManager = getEntityManager().unwrap(HibernateEntityManager.class);
             Session session = hibernateEntityManager.getSession();
             org.hibernate.Query query = session.createSQLQuery("select a.bid from purchase a\n" +
                     "group by a.bid\n" +
                     "order by count(a.bid) desc");
-            result = query.getResultList();
+            query.getResultList().stream().forEach(r->{
+                result.add(Long.parseLong(r.toString()));
+            });
         }catch (Exception ex){
             log.trace("an error occurred "+ex.getMessage()+" "+ex.getCause());
         }

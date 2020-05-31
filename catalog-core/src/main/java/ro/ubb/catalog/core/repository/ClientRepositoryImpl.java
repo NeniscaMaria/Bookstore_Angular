@@ -3,7 +3,7 @@ import javax.persistence.*;
 import javax.persistence.criteria.*;
 
 import org.hibernate.Session;
-import org.hibernate.ejb.HibernateEntityManager;
+import org.hibernate.jpa.HibernateEntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,14 +108,17 @@ public class ClientRepositoryImpl extends CustomRepositorySupport implements Cli
     @Transactional
     public List<Long> getClientsIDsSortedByNumberOfPurchasesNative() {
         log.trace("getClientsIDsSortedByNumberOfPurchasesNative - method entered");
-        List result = new ArrayList();
+        List<Long> result = new ArrayList();
+
         try {
             HibernateEntityManager hibernateEntityManager = getEntityManager().unwrap(HibernateEntityManager.class);
             Session session = hibernateEntityManager.getSession();
             org.hibernate.Query query = session.createSQLQuery("select a.cid from purchase a\n" +
                     "group by a.cid\n" +
                     "order by count(a.cid) desc");
-            result = query.getResultList();
+            query.getResultList().stream().forEach(r->{
+                result.add(Long.parseLong(r.toString()));
+            });
         }catch (Exception ex){
             log.trace("an error occurred "+ex.getMessage()+" "+ex.getCause());
         }

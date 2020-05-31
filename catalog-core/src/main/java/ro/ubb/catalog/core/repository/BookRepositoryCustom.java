@@ -8,7 +8,7 @@ public interface BookRepositoryCustom {
     int getTotalStockCriteria();
     int getTotalStockNative();
     //top books
-    List<Long> getBookIDsSortedByNumberOfPurchasesJPQL();
+    List<Long> getBooksIDsSortedByNumberOfPurchasesJPQL();
     List<Long> getBooksIDsSortedByNumberOfPurchasesCriteria();
     List<Long> getBooksIDsSortedByNumberOfPurchasesNative();
 }

@@ -17,6 +17,7 @@ import ro.ubb.catalog.web.dto.BookDto;
 import ro.ubb.catalog.web.dto.BooksDto;
 import ro.ubb.catalog.web.dto.ClientDto;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -119,11 +120,15 @@ public class ClientController {
         log.trace("getClientIDsByNumberOfPurchases - method entered");
         List<Long> ids = clientService.getClientIDsSortedByNumberOfPurchases();
         List<ClientDto> result = new ArrayList<>();
-        ids.forEach(id->{
-            Client client = clientService.findOneClient(id).get();
-            result.add(clientConverter.convertModelToDto(client));
-            log.trace("getClientIDsByNumberOfPurchases - added client {}",client);
-        });
+        try {
+            ids.forEach(id -> {
+                Client client = clientService.findOneClient(id).get();
+                result.add(clientConverter.convertModelToDto(client));
+                log.trace("getClientIDsByNumberOfPurchases - added client {}", client);
+            });
+        }catch(Exception ex) {
+            log.trace("getClientIDsByNumberOfPurchases - " + ex.getMessage()+" "+ex.getCause());
+        }
         log.trace("getClientIDsByNumberOfPurchases - method finished c={}",result);
         return result;
     }

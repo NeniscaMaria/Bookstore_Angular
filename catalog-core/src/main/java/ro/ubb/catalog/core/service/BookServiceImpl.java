@@ -14,9 +14,12 @@ import ro.ubb.catalog.core.model.Client;
 import ro.ubb.catalog.core.model.validators.Validator;
 import ro.ubb.catalog.core.model.validators.ValidatorException;
 import ro.ubb.catalog.core.repository.BookRepository;
+import ro.ubb.catalog.core.repository.BookRepositoryCustom;
 import ro.ubb.catalog.core.repository.Repository;
 
 import javax.persistence.EntityManagerFactory;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -117,15 +120,12 @@ public class BookServiceImpl implements BookService {
     public List<Long> getBookIDsSortedByNumberOfPurchases() {
         log.trace("getBookIDsSortedByNumberOfPurchases - method entered m={}",method);
         List<Long> result = new ArrayList<>();
-        try {
-            if(method.equals("JPQL"))
-                result = repository.getBookIDsSortedByNumberOfPurchasesJPQL();
-            else if(method.equals("Criteria"))
-                result = repository.getBooksIDsSortedByNumberOfPurchasesCriteria();
-            else if(method.equals("Native"))
-                result = repository.getBooksIDsSortedByNumberOfPurchasesNative();
-        }catch(Exception ex){
-            log.trace("error occurred "+ ex.getMessage() + " " + ex.getCause());
+        String function = "getBooksIDsSortedByNumberOfPurchases"+method;
+        try{
+            Method functionToUse = BookRepositoryCustom.class.getMethod(function);
+            result = (List<Long>) functionToUse.invoke(repository,null);
+        }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException ex){
+            log.trace("getBookIDsSortedByNumberOfPurchases - {} {}",function,ex.getMessage());
         }
         log.trace("getBookIDsSortedByNumberOfPurchases - method finished r={}",result);
         return result;
@@ -135,15 +135,12 @@ public class BookServiceImpl implements BookService {
     public int getTotalStock() {
         log.trace("getTotalStock - method entered m={}",method);
         int result = -1;
-        try {
-            if(method.equals("JPQL"))
-                result = repository.getTotalStockJPQL();
-            else if(method.equals("Criteria"))
-                result = repository.getTotalStockCriteria();
-            else if(method.equals("Native"))
-                result = repository.getTotalStockNative();
-        }catch(Exception ex){
-            log.trace("error occurred "+ ex.getMessage() + " " + ex.getCause());
+        String function = "getTotalStock"+method;
+        try{
+            Method functionToUse = BookRepositoryCustom.class.getMethod(function);
+            result = (int) functionToUse.invoke(repository,null);
+        }catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException ex){
+            log.trace("getTotalStock - {} {}",function,ex.getMessage());
         }
         log.trace("getTotalStock - method finished r={}",result);
         return result;
